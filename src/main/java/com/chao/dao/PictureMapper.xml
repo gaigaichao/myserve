@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.dao.PictureMapper">
+    <resultMap id="BaseResultMap" type="com.chao.model.Picture">
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="user_Name" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="timeinfo" jdbcType="VARCHAR" property="timeinfo" />
+        <result column="photo" jdbcType="BLOB" property="pic" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.chao.model.Picture">
+        insert into photo (userId, img)
+        values (#{userId,jdbcType=INTEGER}, #{img,jdbcType=BLOB});
+    </insert>
+
+    <select id="getLastPic" resultType="com.chao.model.Picture">
+        select * from photo where userId=#{userId};
+    </select>
+</mapper>

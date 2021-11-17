@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.dao.GroupInfoMapper">
+  <resultMap id="BaseResultMap" type="com.chao.model.GroupInfo">
+    <id column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_crter" jdbcType="VARCHAR" property="groupCrter" />
+    <result column="group_detil" jdbcType="VARCHAR" property="groupDetil" />
+    <result column="group_usernum" jdbcType="INTEGER" property="groupUsernum" />
+    <result column="group_crt" jdbcType="TIMESTAMP" property="groupCrt" />
+    <result column="group_udt" jdbcType="TIMESTAMP" property="groupUdt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    group_id, group_name, group_crter, group_detil, group_usernum, group_crt, group_udt
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from group_info
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    DELETE FROM
+    group_info A
+    WHERE A.GROUP_ID = #{groupId,jdbcType=INTEGER}
+    AND A.GROUP_CRTER IN (SELECT USER_NAME FROM USER_INFO WHERE USER_ID = #{userId,jdbcType=INTEGER});
+  </delete>
+
+  <insert id="insert" parameterType="com.chao.model.GroupInfo">
+    insert into group_info ( group_name, group_crter,
+      group_detil)
+    values (#{groupName,jdbcType=VARCHAR}, #{groupCrter,jdbcType=VARCHAR},
+      #{groupDetil,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.chao.model.GroupInfo">
+    update group_info
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCrter != null">
+        group_crter = #{groupCrter,jdbcType=VARCHAR},
+      </if>
+      <if test="groupDetil != null">
+        group_detil = #{groupDetil,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+
+  <update id="addGroupNum" parameterType="java.lang.Integer">
+    update group_info
+    set group_usernum = group_usernum + #{invitedNum,jdbcType=INTEGER}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+
+</mapper>
